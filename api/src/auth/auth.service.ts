@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import bcrypt from 'bcrypt';
+import { compareSync } from 'bcrypt';
 
 @Dependencies(UsersService, JwtService)
 @Injectable()
@@ -23,7 +23,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const decryptedPassword = bcrypt.compareSync(password, user.password);
+    const decryptedPassword = compareSync(password, user.password);
 
     if (!decryptedPassword) {
       throw new UnauthorizedException('Invalid credentials');

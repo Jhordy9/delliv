@@ -7,7 +7,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Public()
-  @Post('users/register')
+  @Post('register')
   async register(
     @Body() registerDto: { email: string; password: string; name: string },
   ) {

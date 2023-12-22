@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { OrderStatus } from '@prisma/client';
-import { db } from 'prisma';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
@@ -8,7 +7,7 @@ export class OrdersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getOrders(status: OrderStatus) {
-    const orders = await db.order.findMany({
+    const orders = await this.prismaService.order.findMany({
       where: { status },
       select: {
         address: true,
