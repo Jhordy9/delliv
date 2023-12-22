@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Param, Put } from '@nestjs/common';
+import { Controller, Get, Body, Param, Put, Query } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { OrderStatus } from '@prisma/client';
 
@@ -7,8 +7,16 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Get('')
-  async getOrders(@Param('status') status: OrderStatus) {
-    return await this.ordersService.getOrders(status);
+  async getOrders(
+    @Query()
+    query: {
+      status?: OrderStatus;
+      search?: string;
+      page?: string;
+      take?: string;
+    },
+  ) {
+    return await this.ordersService.getOrders(query);
   }
 
   @Put(':id')
