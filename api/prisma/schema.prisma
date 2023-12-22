@@ -11,7 +11,33 @@ datasource db {
 }
 
 model User {
-  id    String  @id @default(uuid())
-  email String  @unique
-  name  String?
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  //
+  email      String   @unique
+  name       String
+  password   String
+  order      Order[]
+}
+
+model Order {
+  id         String      @id @default(uuid())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  //
+  address    String
+  status     OrderStatus
+  //
+  user_id    String
+  user       User        @relation(fields: [user_id], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
 }
