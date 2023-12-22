@@ -30,6 +30,8 @@ services:
       - "3010:3010"
     depends_on:
       - delliv-db
+    volumes:
+      - ./api:/app
   delliv-db:
     container_name: delliv-db
     image: postgres:14
