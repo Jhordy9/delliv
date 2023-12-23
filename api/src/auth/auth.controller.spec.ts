@@ -33,6 +33,10 @@ describe('AuthController', () => {
     authService = module.get<AuthService>(AuthService);
   });
 
+  it('should be defined', () => {
+    expect(AuthController).toBeDefined();
+  });
+
   it('should return an access token when login is successful', async () => {
     const signInDto = { email: 'user@example.com', password: 'password' };
 
