@@ -10,7 +10,6 @@ describe('AuthController', () => {
   let authService: AuthService;
 
   beforeEach(async () => {
-    // Mock AuthService
     const mockAuthService = {
       signIn: jest.fn().mockImplementation((email, password) => {
         return { access_token: 'mockJwtToken' };

@@ -26,7 +26,7 @@ describe('UsersService', () => {
           provide: PrismaService,
           useValue: {
             user: {
-              findUnique: jest.fn().mockResolvedValue(null), // Assuming the user does not exist initially
+              findUnique: jest.fn().mockResolvedValue(null),
               create: jest.fn().mockResolvedValue(mockUser),
             },
           },

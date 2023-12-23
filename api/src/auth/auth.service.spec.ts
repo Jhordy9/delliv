@@ -25,18 +25,6 @@ jest.mock('bcrypt', () => {
   };
 });
 
-jest.mock('src/prisma.service', () => {
-  return {
-    PrismaService: jest.fn().mockImplementation(() => {
-      return {
-        user: {
-          findUnique: jest.fn().mockResolvedValue(mockUser),
-        },
-      };
-    }),
-  };
-});
-
 describe('AuthService', () => {
   let authService: AuthService;
   let spyUserService: UsersService;
@@ -57,7 +45,18 @@ describe('AuthService', () => {
           },
         }),
       ],
-      providers: [AuthService, UsersService, PrismaService],
+      providers: [
+        AuthService,
+        UsersService,
+        {
+          provide: PrismaService,
+          useValue: {
+            user: {
+              findUnique: jest.fn().mockResolvedValue(mockUser),
+            },
+          },
+        },
+      ],
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
