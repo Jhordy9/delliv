@@ -7,13 +7,20 @@ import {
   FormLabel,
   VStack,
 } from '@chakra-ui/react';
-import { Formik, Form, Field, FieldProps } from 'formik';
+import { Formik, Form, Field, FieldProps, FormikHelpers } from 'formik';
 import { useDispatch } from 'react-redux';
 import { login } from '@/app/redux/slices/authSlice';
 import { AppDispatch } from '@/app/redux/store';
+import { useRouter } from 'next/navigation';
+
+type Credentials = {
+  email: string;
+  password: string;
+};
 
 export const LoginForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
   const validateEmail = (value: string) => {
     let error;
@@ -35,20 +42,26 @@ export const LoginForm: React.FC = () => {
     return error;
   };
 
+  const handleLogin = (
+    values: Credentials,
+    actions: FormikHelpers<Credentials>
+  ) => {
+    dispatch(login({ email: values.email, password: values.password }))
+      .unwrap()
+      .then(() => {
+        router.push('/orders');
+        actions.setSubmitting(false);
+      })
+      .catch((error) => {
+        actions.setErrors(error);
+        actions.setSubmitting(false);
+      });
+  };
+
   return (
     <Formik
       initialValues={{ email: '', password: '' }}
-      onSubmit={(values, actions) => {
-        dispatch(login({ email: values.email, password: values.password }))
-          .unwrap()
-          .then(() => {
-            actions.setSubmitting(false);
-          })
-          .catch((error) => {
-            actions.setErrors(error);
-            actions.setSubmitting(false);
-          });
-      }}
+      onSubmit={(values, actions) => handleLogin(values, actions)}
     >
       {() => (
         <Form>
@@ -75,7 +88,11 @@ export const LoginForm: React.FC = () => {
                   isInvalid={!!(form.errors.password && form.touched.password)}
                 >
                   <FormLabel>Password</FormLabel>
-                  <Input {...field} placeholder='Enter your password' />
+                  <Input
+                    {...field}
+                    placeholder='Enter your password'
+                    type='password'
+                  />
                   <FormErrorMessage>{form.errors.password}</FormErrorMessage>
                 </FormControl>
               )}

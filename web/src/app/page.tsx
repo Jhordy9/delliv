@@ -1,6 +1,5 @@
 'use client';
-import React from 'react';
-import { Box, Container, Heading, VStack } from '@chakra-ui/react';
+import { Box, Container, VStack } from '@chakra-ui/react';
 import { LoginForm } from '@/app/components/molecules/Login';
 import { Header } from '@/app/components/molecules/Header';
 

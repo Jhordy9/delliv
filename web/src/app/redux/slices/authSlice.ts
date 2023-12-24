@@ -1,4 +1,4 @@
-import axiosInstance from '@/app/services/axios';
+import { axiosRq } from '@/app/services/axios';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
 export type AuthState = {
@@ -14,9 +14,9 @@ export const login = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axiosInstance.post<{ accessToken: string }>(
+      const response = await axiosRq.post<{ access_token: string }>(
         '/auth/login',
-        userData
+        { ...userData }
       );
       return response.data;
     } catch (error) {
@@ -29,9 +29,11 @@ export const login = createAsyncThunk(
   }
 );
 
+const persistedToken = localStorage.getItem('auth');
+
 const initialState: AuthState = {
-  jwtToken: null,
-  isAuthenticated: false,
+  jwtToken: persistedToken,
+  isAuthenticated: !!persistedToken,
   error: null,
 };
 
@@ -42,16 +44,18 @@ const authSlice = createSlice({
     logout(state) {
       state.jwtToken = null;
       state.isAuthenticated = false;
+      localStorage.removeItem('auth');
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(
         login.fulfilled,
-        (state, action: PayloadAction<{ accessToken: string }>) => {
-          state.jwtToken = action.payload.accessToken;
+        (state, action: PayloadAction<{ access_token: string }>) => {
+          state.jwtToken = action.payload.access_token;
           state.isAuthenticated = true;
           state.error = null;
+          localStorage.setItem('auth', action.payload.access_token);
         }
       )
       .addCase(login.rejected, (state, action) => {
