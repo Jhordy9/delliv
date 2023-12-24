@@ -1,0 +1,90 @@
+'use client';
+import { Input } from '@/app/components/atoms/Input';
+import { Button } from '@/app/components/atoms/Button';
+import {
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  VStack,
+} from '@chakra-ui/react';
+import { Formik, Form, Field, FieldProps } from 'formik';
+import { useDispatch } from 'react-redux';
+import { login } from '@/app/redux/slices/authSlice';
+import { AppDispatch } from '@/app/redux/store';
+
+export const LoginForm: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const validateEmail = (value: string) => {
+    let error;
+    if (!value) {
+      error = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(value)) {
+      error = 'Invalid email address';
+    }
+    return error;
+  };
+
+  const validatePassword = (value: string) => {
+    let error;
+    if (!value) {
+      error = 'Password is required';
+    } else if (value.length < 6) {
+      error = 'Password must be at least 6 characters';
+    }
+    return error;
+  };
+
+  return (
+    <Formik
+      initialValues={{ email: '', password: '' }}
+      onSubmit={(values, actions) => {
+        dispatch(login({ email: values.email, password: values.password }))
+          .unwrap()
+          .then(() => {
+            actions.setSubmitting(false);
+          })
+          .catch((error) => {
+            actions.setErrors(error);
+            actions.setSubmitting(false);
+          });
+      }}
+    >
+      {() => (
+        <Form>
+          <VStack spacing={2}>
+            <Field name='email' validate={validateEmail}>
+              {({ field, form }: FieldProps<string, { email: string }>) => (
+                <FormControl
+                  isInvalid={!!(form.errors.email && form.touched.email)}
+                >
+                  <FormLabel>Email</FormLabel>
+                  <Input
+                    {...field}
+                    type='email'
+                    placeholder='Enter your email'
+                  />
+                  <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                </FormControl>
+              )}
+            </Field>
+
+            <Field name='password' validate={validatePassword}>
+              {({ field, form }: FieldProps<string, { password: string }>) => (
+                <FormControl
+                  isInvalid={!!(form.errors.password && form.touched.password)}
+                >
+                  <FormLabel>Password</FormLabel>
+                  <Input {...field} placeholder='Enter your password' />
+                  <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+                </FormControl>
+              )}
+            </Field>
+          </VStack>
+
+          <Button mt={4} text='Login' type='submit' />
+        </Form>
+      )}
+    </Formik>
+  );
+};
