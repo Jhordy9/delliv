@@ -12,6 +12,14 @@ const orderStatuses: OrderStatus[] = [
 ];
 
 async function main() {
+  await prisma.user.create({
+    data: {
+      email: 'test@example.com',
+      password: hashSync('123456', 10),
+      name: 'Test User',
+    },
+  });
+
   // Seed users
   const users = [];
   for (let i = 1; i <= 10; i++) {
