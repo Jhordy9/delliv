@@ -1,15 +1,14 @@
-import { Select } from '@chakra-ui/react';
+import { Select, SelectProps } from '@chakra-ui/react';
 
 type SelectInputProps = {
   options: Array<{ value: string; label: string }>;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-};
+} & SelectProps;
 
 export const SelectInput: React.FC<SelectInputProps> = ({
   options,
-  onChange,
+  ...props
 }) => (
-  <Select onChange={onChange}>
+  <Select {...props}>
     {options.map((option) => (
       <option key={option.value} value={option.value}>
         {option.label}

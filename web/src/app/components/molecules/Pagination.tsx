@@ -1,5 +1,6 @@
 import { Flex, Text } from '@chakra-ui/react';
 import { Button } from '../atoms/Button';
+import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 
 interface PaginationProps {
   currentPage: number;
@@ -13,23 +14,27 @@ export const Pagination: React.FC<PaginationProps> = ({
   onPageChange,
 }) => {
   return (
-    <Flex justifyContent='flex-end' alignItems='center' mt={4}>
+    <Flex justifyContent='flex-end' alignItems='center' h='auto' mb={5}>
       <Button
-        size='sm'
+        size='xs'
         onClick={() => onPageChange(currentPage - 1)}
         isDisabled={currentPage <= 1}
+        leftIcon={<ChevronLeftIcon boxSize={5} />}
+        iconSpacing={0}
       >
-        Previous
+        Anterior
       </Button>
       <Text mx={2}>
-        Page {currentPage} of {totalPages}
+        Página {currentPage} de {totalPages}
       </Text>
       <Button
-        size='sm'
+        size='xs'
         onClick={() => onPageChange(currentPage + 1)}
         isDisabled={currentPage >= totalPages}
+        rightIcon={<ChevronRightIcon boxSize={5} />}
+        iconSpacing={0}
       >
-        Next
+        Próxima
       </Button>
     </Flex>
   );

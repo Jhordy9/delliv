@@ -36,6 +36,30 @@ export type OrdersState = {
   loading: boolean;
   error: string | null;
 };
+
+export const updateOrderStatus = createAsyncThunk(
+  'orders/updateStatus',
+  async (
+    { orderId, newStatus }: { orderId: string; newStatus: OrderStatus },
+    { rejectWithValue }
+  ) => {
+    try {
+      await axiosRq.put(
+        `/orders/${orderId}`,
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('auth')}`,
+          },
+        }
+      );
+      return { orderId, newStatus };
+    } catch (error) {
+      return rejectWithValue('Failed to update order status');
+    }
+  }
+);
+
 export const fetchOrders = createAsyncThunk(
   'orders',
   async (params: FetchOrdersParams, { rejectWithValue }) => {
@@ -52,8 +76,6 @@ export const fetchOrders = createAsyncThunk(
           Authorization: `Bearer ${localStorage.getItem('auth')}`,
         },
       });
-
-      console.log('data', data);
 
       return data;
     } catch (error) {
@@ -84,6 +106,19 @@ const ordersSlice = createSlice({
           state.orders = action.payload.data;
           state.info = action.payload.info;
           state.loading = false;
+        }
+      )
+      .addCase(
+        updateOrderStatus.fulfilled,
+        (
+          state,
+          action: PayloadAction<{ orderId: string; newStatus: OrderStatus }>
+        ) => {
+          const { orderId, newStatus } = action.payload;
+          const order = state.orders.find((order) => order.id === orderId);
+          if (order) {
+            order.status = newStatus;
+          }
         }
       )
       .addCase(fetchOrders.rejected, (state, action) => {
