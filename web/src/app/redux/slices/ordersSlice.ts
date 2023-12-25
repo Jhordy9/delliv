@@ -49,7 +49,7 @@ export const updateOrderStatus = createAsyncThunk(
         { status: newStatus },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('auth')}`,
+            Authorization: `Bearer ${localStorage.getItem('dellivToken')}`,
           },
         }
       );
@@ -73,7 +73,7 @@ export const fetchOrders = createAsyncThunk(
         info: OrdersInfo;
       }>(`/orders?${queryParams}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('auth')}`,
+          Authorization: `Bearer ${localStorage.getItem('dellivToken')}`,
         },
       });
 

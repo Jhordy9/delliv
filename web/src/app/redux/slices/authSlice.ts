@@ -29,7 +29,7 @@ export const login = createAsyncThunk(
   }
 );
 
-const persistedToken = localStorage.getItem('auth');
+const persistedToken = localStorage.getItem('dellivToken');
 
 const initialState: AuthState = {
   jwtToken: persistedToken,
@@ -55,7 +55,7 @@ const authSlice = createSlice({
           state.jwtToken = action.payload.access_token;
           state.isAuthenticated = true;
           state.error = null;
-          localStorage.setItem('auth', action.payload.access_token);
+          localStorage.setItem('dellivToken', action.payload.access_token);
         }
       )
       .addCase(login.rejected, (state, action) => {
