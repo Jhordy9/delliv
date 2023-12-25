@@ -6,6 +6,7 @@ import {
   FormErrorMessage,
   FormLabel,
   VStack,
+  useToast,
 } from '@chakra-ui/react';
 import { Formik, Form, Field, FieldProps, FormikHelpers } from 'formik';
 import { useDispatch } from 'react-redux';
@@ -21,6 +22,7 @@ type Credentials = {
 export const LoginForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const toast = useToast();
 
   const validateEmail = (value: string) => {
     let error;
@@ -49,10 +51,23 @@ export const LoginForm: React.FC = () => {
     dispatch(login({ email: values.email, password: values.password }))
       .unwrap()
       .then(() => {
+        toast({
+          title: 'Login successful',
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
+        });
         router.push('/orders');
         actions.setSubmitting(false);
       })
       .catch((error) => {
+        toast({
+          title: 'Email or password is incorrect',
+          description: error.message,
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
         actions.setErrors(error);
         actions.setSubmitting(false);
       });

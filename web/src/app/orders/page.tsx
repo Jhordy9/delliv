@@ -7,6 +7,7 @@ import { AppDispatch, RootState } from '../redux/store';
 import { Pagination } from '../components/molecules/Pagination';
 import { OrdersTemplate } from '../components/templates/OrdersTemplate';
 import { withAuth } from '../hooks/useAuth';
+import { Header } from '../components/molecules/Header';
 
 const OrdersPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -23,6 +24,7 @@ const OrdersPage: React.FC = () => {
 
   return (
     <Box>
+      <Header />
       <OrdersTemplate
         orders={selector?.orders ?? []}
         onUpdateStatus={() => {}}
