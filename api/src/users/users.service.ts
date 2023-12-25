@@ -11,7 +11,9 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findOne(email: string) {
-    return await this.prismaService.user.findUnique({ where: { email } });
+    return await this.prismaService.user.findUnique({
+      where: { email: email.toLowerCase() },
+    });
   }
 
   async register(email: string, password: string, name: string) {
@@ -29,7 +31,7 @@ export class UsersService {
 
     const registeredUser = await this.prismaService.user.create({
       data: {
-        email,
+        email: email.toLowerCase(),
         password: hashedPassword,
         name,
       },
