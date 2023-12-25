@@ -25,6 +25,7 @@ export class OrdersService {
         user: { name: { contains: search ?? '', mode: 'insensitive' } },
       },
       select: {
+        id: true,
         address: true,
         status: true,
         user: {
