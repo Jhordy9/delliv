@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { hashSync } from 'bcrypt';
 
@@ -11,6 +15,10 @@ export class UsersService {
   }
 
   async register(email: string, password: string, name: string) {
+    if (password.length < 6) {
+      throw new BadRequestException('Password must be at least 6 characters');
+    }
+
     const hashedPassword = hashSync(password, 10);
 
     const findUser = await this.findOne(email);
